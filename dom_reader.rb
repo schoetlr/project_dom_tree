@@ -29,15 +29,19 @@
 
 
 
-Node = Struct.new(:open, 
-                  :close)
+Node = Struct.new(:name,
+                  :class,
+                  :id,
+                  :children, 
+                  :parent)
 
 class DOMReader
 
   def initialize
     @html_nodes = {}
     @dom_string = serialize_dom("test.html")
-    @root = Node.new("html", nil, nil, [])
+    @root = Node.new("html", nil, nil, [], nil)
+    @tree = build_tree
   end
 
   ATTRS = %w{ open close }
@@ -65,20 +69,32 @@ class DOMReader
 
 
   def build_tree
-    html_tags = parse_tag(@dom_string)
-    text_nodes = @dom_string.scan(/>(\s*.+\s*)</)
-    puts "///TAGS///"
+    html_tags = @dom_string.scan(/<\/*\w+>/)
+    text_nodes = @dom_string.scan(/>\s*.+\s*</)
+    # puts "///TAGS///"
+    # html_tags.each do |tag|
+    #   p tag
+    # end
+    # puts
+    # puts "///TEXT///"
+    # text_nodes.each do |txt|
+    #   p txt
+    # end
+    previous_node = @root
     html_tags.each do |tag|
-      p tag
+      new_node = Node.new(tag, nil, nil, [], previous_node)
+      previous_node.children << new_node
+      previous_node = new_node
     end
-    puts
-    puts "///TEXT///"
-    text_nodes.each do |txt|
-      p txt
-    end
+    @root
+  end
+
+  def render_node
+    
+
   end
 
 
 end
 
-DOMReader.new.build_tree
+p DOMReader.new.build_tree
