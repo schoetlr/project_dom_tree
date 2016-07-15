@@ -1,3 +1,15 @@
+HTML_STRING = 
+"<div>
+  div text before
+  <p>
+    p text
+  </p>
+  <div>
+    more div text
+  </div>
+  div text after
+</div>"
+
 def parse_tag(string)
   tag = {}
   /\A\<(\w)/.match(string)
@@ -14,6 +26,14 @@ def parse_tag(string)
 
   tag
 end
+
+
+def parse_html(string)
+  html = {}
+  string.split(' ')
+end
+
+
 
 
 tag = parse_tag("<p class='foo bar' id='baz'> name='hello'")
