@@ -35,8 +35,9 @@ end
 
 def parse_html(string)
   html = {}
-  tags = string.scan(/<.+>/)
-  text_nodes = string.scan(/>(\s*.+\s*)</)
+  tags = string.scan(/\<\/*\w+\>/)
+  p tags
+  p text_nodes = string.split(/\<\/*\w+\>/)
   html[:tags] = tags
   html[:text_nodes] = text_nodes
   html
@@ -49,11 +50,11 @@ def render_html(html)
   i = 0
   while i < tags.length
     unless text_nodes[i].nil?
-      output += "#{tags[i]}#{text_nodes[i][0]}"
+      output += "#{tags[i]}#{text_nodes[i]}"
     end
     i += 1
   end
-  output + html[:tags][-1]
+  output + tags[-1]
 end
 
 html = parse_html(HTML_STRING)
