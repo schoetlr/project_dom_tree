@@ -9,11 +9,14 @@ def parse_tag(string)
   /id=['"]([\w\s\-]+)['"]/.match(string)
   tag[:id] = $1
 
+  /name=['"]([\w\s\-]+)['"]/.match(string)
+  tag[:name] = $1
+
   tag
 end
 
 
-tag = parse_tag("<p class='foo bar' id='baz'>")
+tag = parse_tag("<p class='foo bar' id='baz'> name='hello'")
 tag.each do |pair|
   p "#{pair[0]}: #{pair[1]}"
 end
