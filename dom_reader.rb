@@ -29,27 +29,56 @@
 
 
 
-Node = Struct.new(:name, :class, :id, :children, :parent)
-
+Node = Struct.new(:open, 
+                  :close)
 
 class DOMReader
-  HTML_TAG = /<.*>/
 
   def initialize
+    @html_nodes = {}
     @dom_string = serialize_dom("test.html")
-    @root = Node.new("<!doctype html>", nil, nil, [])
+    @root = Node.new("html", nil, nil, [])
   end
 
+  ATTRS = %w{ open close }
+  REGEXS = [/(<\w+.*?>)/,
+            /(<\/\w+>)/]
+
+  ATTRS.each_index do |i|
+    define_method("parse_#{ATTRS[i]}") do |string|
+      REGEXS[i].match(string)
+      $1
+    end
+  end
 
   def serialize_dom(file_name)
     text = File.read(file_name)
   end
 
-  def build_tree
-    html_tags = @dom_string.scan(HTML_TAG)
-    text_nodes = @dom_string.split(HTML_TAG)
+  def make_html_node(string)
+    attributes = []
+    ATTRS.each do |attrib|
+      attributes << send("parse_#{attrib}".to_sym,string)
+    end
+    Node.new(*attributes)
+  end
 
+
+  def build_tree
+    html_tags = parse_tag(@dom_string)
+    text_nodes = @dom_string.scan(/>(\s*.+\s*)</)
+    puts "///TAGS///"
+    html_tags.each do |tag|
+      p tag
+    end
+    puts
+    puts "///TEXT///"
+    text_nodes.each do |txt|
+      p txt
+    end
   end
 
 
 end
+
+DOMReader.new.build_tree

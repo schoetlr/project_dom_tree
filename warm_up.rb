@@ -12,7 +12,9 @@ HTML_STRING =
 
 def parse_tag(string)
   tag = {}
-  /\A\<(\w+)/.match(string)
+
+
+  /<(\w+)>/.match(string)
   tag[:type] = $1
 
   if /class=['"]([\w\s\-]+)['"]/.match(string)
