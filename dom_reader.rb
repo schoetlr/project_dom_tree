@@ -29,19 +29,26 @@
 
 
 
-Node = Struct.new(:name, :class, :id, :children)
+Node = Struct.new(:name, :class, :id, :children, :parent)
 
 
 class DOMReader
-  
+  HTML_TAG = /<.*>/
+
   def initialize
     @dom_string = serialize_dom("test.html")
-    @root = Node.new("<html>", nil, nil, [])
+    @root = Node.new("<!doctype html>", nil, nil, [])
   end
 
 
   def serialize_dom(file_name)
     text = File.read(file_name)
+  end
+
+  def build_tree
+    html_tags = @dom_string.scan(HTML_TAG)
+    text_nodes = @dom_string.split(HTML_TAG)
+
   end
 
 
