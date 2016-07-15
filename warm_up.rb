@@ -35,25 +35,26 @@ end
 
 def parse_html(string)
   html = {}
-  tags = string.scan(/(<.+>)/)
-  text_nodes = string.scan(/>(.+)</)
-  tags
-  text_nodes
-  # p $1
-  # i = 1
-  # array = []
-  # begin
-  #   array << parse_tag($i)
-  #   i += 1
-  # end until $i.nil?
-  # array
+  tags = string.scan(/<.+>/)
+  text_nodes = string.scan(/>(\s*.+\s*)</)
+  html[:tags] = tags
+  html[:text_nodes] = text_nodes
+  html
 end
 
-p parse_html(HTML_STRING)
+def render_html(html)
+  tags = html[:tags]
+  text_nodes = html[:text_nodes]
+  output = ""
+  i = 0
+  while i < tags.length
+    unless text_nodes[i].nil?
+      output += "#{tags[i]}#{text_nodes[i][0]}"
+    end
+    i += 1
+  end
+  output + html[:tags][-1]
+end
 
-
-#test for parse_tag
-# tag = parse_tag("<p class='foo bar' id='baz'> name='hello'")
-# tag.each do |pair|
-#   p "#{pair[0]}: #{pair[1]}"
-# end
+html = parse_html(HTML_STRING)
+puts render_html(html)
