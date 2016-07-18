@@ -61,3 +61,6 @@ end
 
 html = parse_html(HTML_STRING)
 puts render_html(html)
+
+
+#use a stack to keep track of open and closing tags
